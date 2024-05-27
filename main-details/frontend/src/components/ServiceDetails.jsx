@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import { serviceById } from '../features/serviceSlice';
@@ -7,7 +7,8 @@ export default function ServiceDetails() {
   const { id: serviceId } = useParams();
   const dispatch = useDispatch();
   const { serviceDetails, isLoading, error } = useSelector((state) => state.service);
-
+  const navigate = useNavigate();
+  
   useEffect(() => {
     if (serviceId) {
       dispatch({ type: serviceById.pending.type, payload: serviceId });
@@ -23,6 +24,7 @@ export default function ServiceDetails() {
           <h3>{serviceDetails.name}</h3>
           <p>{serviceDetails.price}</p>
           <p>{serviceDetails.content}</p>
+          <span onClick={() => navigate('/')}>Back</span>
         </div>
       )}
     </div>

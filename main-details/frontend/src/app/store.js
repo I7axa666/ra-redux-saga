@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 import createSagaMiddleware from 'redux-saga';
 import serviceReducer from '../features/serviceSlice';
-import rootSaga from '../sagas/serviceSaga.js';
+import rootSaga from '../sagas/serviceSaga';
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -16,9 +16,9 @@ const store = configureStore({
           'service/fetchToService/pending',
           'service/fetchToService/fulfilled',
           'service/fetchToService/rejected',
-          'service/fetchServiceById/pending',
-          'service/fetchServiceById/fulfilled',
-          'service/fetchServiceById/rejected'
+          'service/serviceById/pending',
+          'service/serviceById/fulfilled',
+          'service/serviceById/rejected'
         ],
         ignoredActionPaths: ['meta.arg', 'payload'],
         ignoredPaths: ['serviceInfo.dates'],

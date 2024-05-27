@@ -5,7 +5,7 @@ import { fetchToService, serviceById } from '../features/serviceSlice';
 function* fetchServicesSaga() {
   try {
     yield delay(300); // Add delay to debounce the API call
-    const response = yield call(fetchToService);
+    const response = yield call(() => fetch('http://localhost:7070/api/services').then(res => res.json()));
     yield put({ type: fetchToService.fulfilled.type, payload: response });
   } catch (error) {
     yield put({ type: fetchToService.rejected.type, payload: error.message });
@@ -15,7 +15,7 @@ function* fetchServicesSaga() {
 // Fetch a specific service by ID
 function* fetchServiceByIdSaga(action) {
   try {
-    const response = yield call(serviceById, action.payload);
+    const response = yield call(() => fetch(`http://localhost:7070/api/services/${action.payload}`).then(res => res.json()));
     yield put({ type: serviceById.fulfilled.type, payload: response });
   } catch (error) {
     yield put({ type: serviceById.rejected.type, payload: error.message });
