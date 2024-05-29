@@ -3,12 +3,12 @@ import { useActions } from '../hooks/useActions';
 
 export default function Skills() {
   const { skillList, isLoading, error, search } = useSelector((state) => state.skills);
-  const { inputValue } = useActions();
-
-
+  const { inputValue, getSkills } = useActions();
+  
   const onChange = (e) => {
     const value = e.target.value;
     inputValue(value);
+    getSkills(value);
   };
 
   return (
@@ -20,7 +20,7 @@ export default function Skills() {
         ) : isLoading ? (
           <p>Loading...</p>
         ) : error ? (
-          <p>{error}</p>
+          <p>Skill loading error</p>
         ) : skillList.length === 0 ? (
           <p>No skills found</p>
         ) : (

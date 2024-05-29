@@ -7,7 +7,9 @@ export const getSkills = createAsyncThunk(
     url.searchParams.append('q', value);
     try {
       const response = await fetch(url);
-      return await response.json();
+      const data = await response.json();
+      console.log(data)
+      return Array.isArray(data) ? data : [];
     } catch (error) {
       return thunkApi.rejectWithValue(error.toString());
     }

@@ -5,14 +5,9 @@ import bodyParser from "body-parser";
 const app = express();
 
 app.use(cors());
-app.use(
-  bodyParser.json({
-    type(req) {
-      return true;
-    },
-  })
-);
-app.use(function (req, res, next) {
+app.use(bodyParser.json());
+
+app.use((req, res, next) => {
   res.setHeader('Content-Type', 'application/json');
   next();
 });
@@ -28,24 +23,22 @@ const skills = [
 ];
 
 let isEven = true;
-app.get("/api/search", async (req, res) => {
+
+app.get("/api/search", (req, res) => {
   if (Math.random() > 0.75) {
-    return res.status(500).end();
+    return res.status(500).send(JSON.stringify({ error: "Internal Server Error" }));
   }
+
   const { q } = req.query;
-  return new Promise((resolve, reject) => {
-    setTimeout(
-      () => {
-        const data = skills.filter((o) =>
-          o.name.toLowerCase().startsWith(q.toLowerCase())
-        );
-        res.send(JSON.stringify(data));
-        resolve();
-      },
-      isEven ? 1000 : 5 * 1000
+  const delay = isEven ? 1000 : 5000;
+  isEven = !isEven;
+
+  setTimeout(() => {
+    const data = skills.filter((skill) =>
+      skill.name.toLowerCase().startsWith(q.toLowerCase())
     );
-    isEven = !isEven;
-  });
+    res.send(JSON.stringify(data));
+  }, delay);
 });
 
 const port = process.env.PORT || 7070;

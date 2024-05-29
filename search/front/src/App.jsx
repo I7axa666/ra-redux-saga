@@ -1,16 +1,12 @@
-import './App.css'
-import Skills from './components/Skills'
+import './App.css';
+import Skills from './components/Skills';
 
 function App() {
- 
-
   return (
-    <>
-      <div>
-        <Skills />
-      </div>
-    </>
-  )
+    <div className="App">
+      <Skills />
+    </div>
+  );
 }
 
-export default App
+export default App;

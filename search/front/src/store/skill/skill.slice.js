@@ -23,8 +23,9 @@ const skillSlice = createSlice({
         state.error = null;
       })
       .addCase(getSkills.fulfilled, (state, action) => {
+        
+        state.skillList = Array.isArray(action.payload) ? action.payload : [];
         state.isLoading = false;
-        state.skillList = action.payload;
       })
       .addCase(getSkills.rejected, (state, action) => {
         state.isLoading = false;
@@ -36,3 +37,4 @@ const skillSlice = createSlice({
 
 export const { inputValue } = skillSlice.actions;
 export default skillSlice.reducer;
+export { getSkills }
