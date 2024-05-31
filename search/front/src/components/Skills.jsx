@@ -3,12 +3,11 @@ import { useActions } from '../hooks/useActions';
 
 export default function Skills() {
   const { skillList, isLoading, error, search } = useSelector((state) => state.skills);
-  const { inputValue, getSkills } = useActions();
+  const { inputValue } = useActions();
   
   const onChange = (e) => {
     const value = e.target.value;
     inputValue(value);
-    getSkills(value);
   };
 
   return (

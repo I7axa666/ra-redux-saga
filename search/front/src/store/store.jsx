@@ -12,17 +12,7 @@ const rootReducer = combineReducers({
 const store = configureStore({
   reducer: rootReducer,
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({
-      serializableCheck: {
-        ignoredActions: [
-          'skills/getSkills/pending',
-          'skills/getSkills/fulfilled',
-          'skills/getSkills/rejected',
-        ],
-        ignoredActionPaths: ['meta.arg', 'payload'],
-        ignoredPaths: ['items.dates'],
-      },
-    }).concat(sagaMiddleware),
+    getDefaultMiddleware().concat(sagaMiddleware),
 });
 
 sagaMiddleware.run(rootSaga);

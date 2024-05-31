@@ -1,23 +1,40 @@
-import { takeLatest, put, call, delay } from 'redux-saga/effects';
-import { getSkills } from '../store/skill/skill.actions';
-import { inputValue } from '../store/skill/skill.slice';
+import { takeLatest, put, spawn, retry, take } from 'redux-saga/effects';
+import { searchError, searchRequest, searchSuccess } from '../store/skill/skill.slice';
+
+async function searchItems(search) {
+  const url = new URL('http://localhost:7070/api/search');
+  url.searchParams.append('q', search);
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(response.statusText);
+  }
+  const data = await response.json();
+  return Array.isArray(data) ? data : [];
+}
 
 function* fetchSkillsSaga(action) {
   try {
-    yield delay(300);
-    const skills = yield call(() => getSkills(action.payload));
-    console.log('Saga: fetchSkillsSaga received skills:', skills);
-    yield put({ type: getSkills.fulfilled.type, payload: skills });
+    const retryCount = 3;
+    const retryDelay = 1 * 1000;
+    const data = yield retry(retryCount, retryDelay, searchItems, action.payload);
+    yield put(searchSuccess(data));
   } catch (error) {
-    console.log('Saga: fetchSkillsSaga error:', error.message);
-    yield put({ type: getSkills.rejected.type, payload: error.message });
+    yield put(searchError(error.message));
   }
 }
 
-function* watchFetchSkills() {
-  yield takeLatest(inputValue.type, fetchSkillsSaga);
+function* watchChangeSearchSaga() {
+  while (true) {
+    const action = yield take('skills/inputValue');
+    yield put(searchRequest(action.payload));
+  }
+}
+
+function* watchSearchRequestSaga() {
+  yield takeLatest('skills/searchRequest', fetchSkillsSaga);
 }
 
 export default function* rootSaga() {
-  yield watchFetchSkills();
+  yield spawn(watchChangeSearchSaga);
+  yield spawn(watchSearchRequestSaga);
 }
